@@ -13,7 +13,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       AdminCreateUserConfig:
-        AllowAdminCreateUserOnly: false
+        AllowAdminCreateUserOnly: True
       UserPoolName: TestingUsers
       UsernameAttributes:
       - email
@@ -33,13 +33,17 @@ Resources:
       GenerateSecret: false
       ExplicitAuthFlows:
       - USER_PASSWORD_AUTH
-  UserPoolUser:
-    Type: AWS::Cognito::UserPoolUser
-    Properties:
-      DesiredDeliveryMediums:
-        - EMAIL
-      Username: !Ref YourEmail
-      UserPoolId: !Ref UserPool
+  # Error with this attribute : Username not recognised as an email, so we create the user afterward in the makefile
+  # UserPoolUser:
+  #   Type: AWS::Cognito::UserPoolUser
+  #   Properties:
+  #     DesiredDeliveryMediums:
+  #       - EMAIL
+  #     UserAttributes:
+  #       - Name: email
+  #         Value: !Ref YourEmail
+  #     Username: !Ref YourEmail
+  #     UserPoolId: !Ref UserPool
 
   # You don't actually need the API, but it does allow you to centralize your auth config, and allows you to add an Open API Spec
   ServiceApi:
