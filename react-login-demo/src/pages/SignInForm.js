@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 import { useAppContext } from "../lib/contextLib";
 import { useHistory } from "react-router";
 
 const SignInForm = () => {
 
-    const { userHasAuthenticated } = useAppContext();
+    const { isAuthenticated, userHasAuthenticated } = useAppContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
@@ -22,8 +22,8 @@ const SignInForm = () => {
         (async () => {
             try {
                 await Auth.signIn(email, password);
-                alert("Logged in");
                 userHasAuthenticated(true);
+                alert("Logged in");
                 
             } catch (e) {
                 alert(e.message);
@@ -31,6 +31,13 @@ const SignInForm = () => {
         })();
         history.push("/welcome");
     };
+
+    useEffect(() => {
+        // Redirect to the logged in pages if the user is logged in
+        if (isAuthenticated) {
+            history.push("/welcome");
+        }
+    }, [isAuthenticated, history]);
 
     return (
     <div className="formCenter">

@@ -1,77 +1,65 @@
-import React, { useState } from "react";
-import { Auth } from "aws-amplify";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../lib/contextLib";
-
 
 const Welcome = () => {
 
-    const { isAuthenticated, userHasAuthenticated } = useAppContext();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [status, setStatus] = useState([]);
+    const [initialCheck, setInitialCheck] = useState(false);
+    const { userHasAuthenticated } = useAppContext();
 
-    const handleChangeUsename = event => {
-        setEmail(event.target.value);  
-      };
+    function handleLogout() {
+        userHasAuthenticated(false);
+    }      
 
-    const handleChangePassword = event => {
-        setPassword(event.target.value);  
-    };
-
-    const handleSubmit = () => {
+    const getStatus = () => {
         (async () => {
-            console.log("The form was submitted with the following data:");
-
             try {
-                await Auth.signIn(email, password);
-                alert("Logged in");
-                userHasAuthenticated(true);
-                console.log(isAuthenticated)
+                console.log("salut")
+                setStatus({"name": "one", "state":"two", "machine":"tree" })
             } catch (e) {
-                alert(e.message);
+              console.error(e);
             }
         })();
+      };
+    
+      const startServer = () => {
+        (async () => {
+            try {
+              console.log("start")
+            } catch (e) {
+              console.error(e);
+            }
+          })();
         console.log("bonjour");
-    };
+      };
+    
+      const stopServer = () => {
+    
+        (async () => {
+            try {
+              console.log("stop")
+            } catch (e) {
+              console.error(e);
+            }
+          })();
+      };
+
+      useEffect(() => {
+        if(!initialCheck){
+            getStatus()
+        }
+      }, []);
 
     return (
-    <div className="formCenter">
-        <form className="formFields" onSubmit={handleSubmit}>
-        <div className="formField">
-            <label className="formFieldLabel" htmlFor="email">
-            E-Mail Address
-            </label>
-            <input
-            type="email"
-            id="email"
-            className="formFieldInput"
-            placeholder="Enter your email"
-            name="email"
-            value={email}
-            onChange={handleChangeUsename}
-            />
+        <div className="appForm">
+            <div><p>the status of the server <b>{status.name}</b> is {status.state} on a {status.machine} machine</p></div>
+            <div>
+                <button onClick={getStatus}>Check server status</button>
+                <button onClick={startServer}>Start the server</button>
+                <button onClick={stopServer}>Stop the server</button>
+            </div>
+            <div><button onClick={handleLogout}>Sign Out</button></div>
         </div>
-
-        <div className="formField">
-            <label className="formFieldLabel" htmlFor="password">
-            Password
-            </label>
-            <input
-            type="password"
-            id="password"
-            className="formFieldInput"
-            placeholder="Enter your password"
-            name="password"
-            value={password}
-            onChange={handleChangePassword}
-            />
-        </div>
-
-        <div className="formField">
-            <button className="formFieldButton">Sign In</button>{" "}
-        </div>
-
-        </form>
-    </div>
     );
 }
 
