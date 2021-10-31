@@ -2,7 +2,7 @@ Description: "Microservice API and Auth settings"
 Transform: "AWS::Serverless-2016-10-31"
 
 Parameters:
-  YourEmail:
+  PoolName:
     Type: String
   Version:
     Type: String
@@ -14,7 +14,7 @@ Resources:
     Properties:
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: True
-      UserPoolName: TestingUsers
+      UserPoolName: !Ref PoolName
       UsernameAttributes:
       - email
       AutoVerifiedAttributes:
@@ -33,17 +33,6 @@ Resources:
       GenerateSecret: false
       ExplicitAuthFlows:
       - USER_PASSWORD_AUTH
-  # Error with this attribute : Username not recognised as an email, so we create the user afterward in the makefile
-  # UserPoolUser:
-  #   Type: AWS::Cognito::UserPoolUser
-  #   Properties:
-  #     DesiredDeliveryMediums:
-  #       - EMAIL
-  #     UserAttributes:
-  #       - Name: email
-  #         Value: !Ref YourEmail
-  #     Username: !Ref YourEmail
-  #     UserPoolId: !Ref UserPool
 
   # You don't actually need the API, but it does allow you to centralize your auth config, and allows you to add an Open API Spec
   ServiceApi:
