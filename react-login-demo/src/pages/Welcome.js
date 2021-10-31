@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { useAppContext } from "../lib/contextLib";
-import { useHistory } from "react-router";
 
-const SignInForm = () => {
 
-    const { userHasAuthenticated } = useAppContext();
+const Welcome = () => {
+
+    const { isAuthenticated, userHasAuthenticated } = useAppContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const history = useHistory();
 
     const handleChangeUsename = event => {
-        setEmail(event.target.value);
+        setEmail(event.target.value);  
       };
 
     const handleChangePassword = event => {
@@ -20,16 +19,18 @@ const SignInForm = () => {
 
     const handleSubmit = () => {
         (async () => {
+            console.log("The form was submitted with the following data:");
+
             try {
                 await Auth.signIn(email, password);
                 alert("Logged in");
                 userHasAuthenticated(true);
-                
+                console.log(isAuthenticated)
             } catch (e) {
                 alert(e.message);
             }
         })();
-        history.push("/welcome");
+        console.log("bonjour");
     };
 
     return (
@@ -74,4 +75,4 @@ const SignInForm = () => {
     );
 }
 
-export default SignInForm;
+export default Welcome;
