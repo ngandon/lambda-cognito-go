@@ -28,9 +28,8 @@ const Welcome = () => {
                                                                 headers: {
                                                                     "Authorization": idToken
                                                                 },})
-            console.log("status")
-            console.log(response.message)
-            setStatus({"name": "one", "state":"two", "machine":"tree" })
+            setStatus(response)
+            console.log(response.message, response.name, response.state, response.machine)
         } catch (e) {
             console.error(e);
         }

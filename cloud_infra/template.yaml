@@ -57,9 +57,8 @@ Resources:
       Description: Start an EC2 instance
       Runtime: go1.x
       Handler: ./dist/start
-      # Policies:
-        # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
-        # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
+      Policies:
+        - AmazonEC2FullAccess 
       Events:
         Get:
           Type: Api
@@ -75,9 +74,8 @@ Resources:
       Description: Stop an EC2 instance
       Runtime: go1.x
       Handler: ./dist/stop
-      # Policies:
-        # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
-        # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
+      Policies:
+        - AmazonEC2FullAccess 
       Events:
         Get:
           Type: Api
@@ -93,9 +91,8 @@ Resources:
       Description: Get status of an EC2 instance
       Runtime: go1.x
       Handler: ./dist/status
-      # Policies:
-        # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
-        # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
+      Policies:
+        - AmazonEC2FullAccess 
       Events:
         Get:
           Type: Api

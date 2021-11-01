@@ -45,14 +45,17 @@ clean:
 deps: clean
 	go get github.com/aws/aws-lambda-go/events
 	go get github.com/aws/aws-lambda-go/lambda
+	go get github.com/aws/aws-sdk-go/aws/session
+	go get github.com/aws/aws-sdk-go/service/ec2
+	go get github.com/aws/aws-sdk-go/aws
 
 .PHONY: build
 build: deps
 	go env -w GO111MODULE=off # Needed to fix "github.com/aws/aws-lambda-go/events: go.mod file not found" issue.
-	GOOS=linux go build -o dist/start ./src/start.go
-	GOOS=linux go build -o dist/stop ./src/stop.go
-	GOOS=linux go build -o dist/status ./src/status.go
-	GOOS=linux go build -o dist/ping ./src/ping.go
+	GOOS=linux go build -o dist/start ./src/start/start.go
+	GOOS=linux go build -o dist/stop ./src/stop/stop.go
+	GOOS=linux go build -o dist/status ./src/status/status.go
+	GOOS=linux go build -o dist/ping ./src/ping/ping.go
 
 .PHONY: api
 api: build
