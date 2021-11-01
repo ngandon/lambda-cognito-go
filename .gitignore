@@ -16,3 +16,5 @@ template_deploy.yaml
 
 # IntelliJ
 .idea/
+
+cloud_infra/env.sh
