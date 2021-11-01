@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
+import { API } from "aws-amplify";
 import { useAppContext } from "../lib/contextLib";
 
 const Welcome = () => {
@@ -6,15 +8,29 @@ const Welcome = () => {
     const [status, setStatus] = useState([]);
     const [initialCheck, setInitialCheck] = useState(false);
     const { userHasAuthenticated } = useAppContext();
+    const { idToken } = useAppContext();
 
-    function handleLogout() {
+    async function handleLogout() {
+        await Auth.signOut();
+
         userHasAuthenticated(false);
     }      
 
+    // TODO : refresh token if needed
+    // eslint-disable-next-line
     const getStatus = () => {
+        if(!initialCheck){
+            setInitialCheck(true)
+        }
         (async () => {
             try {
-                console.log("salut")
+                // const response = await API.get("lambda-API", "/Stage/open");
+                const response = await API.get("lambda-API", "/Stage",  {
+                                                                    headers: {
+                                                                        "Authorization": idToken
+                                                                    },
+                                                                    })
+                console.log(response.data)
                 setStatus({"name": "one", "state":"two", "machine":"tree" })
             } catch (e) {
               console.error(e);
@@ -26,11 +42,11 @@ const Welcome = () => {
         (async () => {
             try {
               console.log("start")
+              console.log(idToken)
             } catch (e) {
               console.error(e);
             }
           })();
-        console.log("bonjour");
       };
     
       const stopServer = () => {
@@ -48,7 +64,7 @@ const Welcome = () => {
         if(!initialCheck){
             getStatus()
         }
-      }, []);
+      }, [initialCheck, getStatus]);
 
     return (
         <div className="appForm">
@@ -58,7 +74,7 @@ const Welcome = () => {
                 <button onClick={startServer}>Start the server</button>
                 <button onClick={stopServer}>Stop the server</button>
             </div>
-            <div><button onClick={handleLogout}>Sign Out</button></div>
+            <div><button onClick={handleLogout}>Log Out</button></div>
         </div>
     );
 }

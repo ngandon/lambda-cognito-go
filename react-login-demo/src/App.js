@@ -15,6 +15,7 @@ function App() {
 
     const [isAuthenticated, userHasAuthenticated] = useState(false);
     const [isAuthenticating, setIsAuthenticating] = useState(true);
+    const [idToken, setIdToken] = useState();
 
     useEffect(() => {
         onLoad();
@@ -23,7 +24,10 @@ function App() {
     // load the user session
     async function onLoad() {
         try {
-            await Auth.currentSession();
+            const res = await Auth.currentSession();
+            const token = res.getIdToken().getJwtToken();
+            console.log(token)
+            setIdToken(token)
             console.log("already logged in")
             userHasAuthenticated(true);            
         }
@@ -48,7 +52,7 @@ function App() {
 
     return (
         !isAuthenticating && (
-            <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+            <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated, idToken }}>
                 <Router basename="/react-auth-ui/">
                     <div className="App">
                         <div className="appAside" />
