@@ -3,7 +3,7 @@ Visit [Here](https://tenmilesquare.com/aws-sam-api-with-cognito/) to view the as
 
 
 ## To run
-- Set the following environment variables
+- Set the following environment variables (NOT UP TO DATE)
   - STACK_NAME
   - STACK_BUCKET (this bucket must exist in your AWS environment)
   - YOUR_EMAIL (The template will create a user at this email and send you a temp password)

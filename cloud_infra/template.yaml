@@ -43,7 +43,7 @@ Resources:
       # This is only needed if you are Requesting from a domain that is not shared with this API Domain
       # Know the security implications before doing this on a production site
       Cors:
-        AllowMethods: "'*'"
+        AllowMethods: "'POST, GET'"
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"
       Auth:
