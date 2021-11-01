@@ -7,10 +7,10 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func handleUnauthenticatedRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       "{\"message\":\"This endpoint does not require any authentication\",\"structure\":\"This field was added just to prove it's not an error\"}",
+		Body:       "{\"message\":\"this is a status\",\"structure\":\"See this is actually not an error\"}",
 		// This is important as part of the CORS config.
 		// Again you should know the security implications of CORS before implementing this
 		Headers: map[string]string{
@@ -23,5 +23,5 @@ func handleUnauthenticatedRequest(ctx context.Context, request events.APIGateway
 }
 
 func main() {
-	lambda.Start(handleUnauthenticatedRequest)
+	lambda.Start(handleRequest)
 }

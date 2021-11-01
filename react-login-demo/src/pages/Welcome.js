@@ -18,46 +18,48 @@ const Welcome = () => {
 
     // TODO : refresh token if needed
     // eslint-disable-next-line
-    const getStatus = () => {
+    async function getStatus () {
         if(!initialCheck){
             setInitialCheck(true)
+        }       
+        try {
+            // const response = await API.get("lambda-API", "/Stage/open");
+            const response = await API.get("lambda-API", "/Stage/status",  {
+                                                                headers: {
+                                                                    "Authorization": idToken
+                                                                },})
+            console.log("status")
+            console.log(response.message)
+            setStatus({"name": "one", "state":"two", "machine":"tree" })
+        } catch (e) {
+            console.error(e);
         }
-        (async () => {
-            try {
-                // const response = await API.get("lambda-API", "/Stage/open");
-                const response = await API.get("lambda-API", "/Stage",  {
-                                                                    headers: {
-                                                                        "Authorization": idToken
-                                                                    },
-                                                                    })
-                console.log(response.data)
-                setStatus({"name": "one", "state":"two", "machine":"tree" })
-            } catch (e) {
-              console.error(e);
-            }
-        })();
       };
     
-      const startServer = () => {
-        (async () => {
-            try {
-              console.log("start")
-              console.log(idToken)
-            } catch (e) {
-              console.error(e);
-            }
-          })();
+      async function startServer () {
+        try {
+            const response = await API.post("lambda-API", "/Stage/start",  {
+                                                                headers: {
+                                                                    "Authorization": idToken
+                                                                },})
+            console.log("start")
+            console.log(response.message)
+        } catch (e) {
+            console.error(e);
+        }
       };
     
-      const stopServer = () => {
-    
-        (async () => {
-            try {
-              console.log("stop")
-            } catch (e) {
-              console.error(e);
-            }
-          })();
+      async function stopServer () {
+        try {
+            const response = await API.post("lambda-API", "/Stage/stop",  {
+                                                                headers: {
+                                                                    "Authorization": idToken
+                                                                },})
+            console.log("stop")
+            console.log(response.message)
+        } catch (e) {
+            console.error(e);
+        }
       };
 
       useEffect(() => {

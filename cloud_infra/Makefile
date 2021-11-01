@@ -49,8 +49,10 @@ deps: clean
 .PHONY: build
 build: deps
 	go env -w GO111MODULE=off # Needed to fix "github.com/aws/aws-lambda-go/events: go.mod file not found" issue.
-	GOOS=linux go build -o dist/authenticated ./src/authenticated.go
-	GOOS=linux go build -o dist/open ./src/open.go
+	GOOS=linux go build -o dist/start ./src/start.go
+	GOOS=linux go build -o dist/stop ./src/stop.go
+	GOOS=linux go build -o dist/status ./src/status.go
+	GOOS=linux go build -o dist/ping ./src/ping.go
 
 .PHONY: api
 api: build
@@ -73,6 +75,21 @@ deploy: build
 
 	@# we have to recall make because POOL_ID is not defined before the infra has been deployed
 	make create_user
+
+.PHONY: update
+update: build
+	aws cloudformation package \
+		--template-file template.yaml \
+		--output-template template_deploy.yaml \
+		--s3-bucket $(STACK_BUCKET)
+
+	# aws s3 cp ./swagger.yaml s3://$(STACK_BUCKET)/lambda-cognito-go-api-def.yaml
+	aws cloudformation deploy \
+		--no-fail-on-empty-changeset \
+		--template-file template_deploy.yaml \
+		--stack-name $(STACK_NAME) \
+		--parameter-overrides "ResourceBucket=$(STACK_BUCKET)" "PoolName=$(POOL_NAME)" \
+        --capabilities CAPABILITY_IAM
 
 # Note: To create other users, you can override USER_MAIL and USER_PWD with : USER_EMAIL="" USER_PWD="" make create_user
 .PHONY: create_user

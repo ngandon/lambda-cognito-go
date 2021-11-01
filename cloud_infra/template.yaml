@@ -51,12 +51,12 @@ Resources:
           CognitoAuthorizer:
             UserPoolArn: !GetAtt "UserPool.Arn"
 
-  LambdaFunction:
+  StartServer:
     Type: AWS::Serverless::Function
     Properties:
-      Description: Handles the basic request
+      Description: Start an EC2 instance
       Runtime: go1.x
-      Handler: ./dist/authenticated
+      Handler: ./dist/start
       # Policies:
         # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
         # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
@@ -64,22 +64,58 @@ Resources:
         Get:
           Type: Api
           Properties:
-            Path: /
+            Path: /start
             RestApiId: !Ref ServiceApi
-            Method: GET
+            Method: POST
             Auth:
               Authorizer: CognitoAuthorizer
-  OpenLambdaFunction:
+  StopServer:
     Type: AWS::Serverless::Function
     Properties:
-      Description: Handles the basic request with no need for authentication
+      Description: Stop an EC2 instance
       Runtime: go1.x
-      Handler: ./dist/open
+      Handler: ./dist/stop
+      # Policies:
+        # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
+        # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
       Events:
         Get:
           Type: Api
           Properties:
-            Path: /open
+            Path: /stop
+            RestApiId: !Ref ServiceApi
+            Method: POST
+            Auth:
+              Authorizer: CognitoAuthorizer
+  StatusServer:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Get status of an EC2 instance
+      Runtime: go1.x
+      Handler: ./dist/status
+      # Policies:
+        # Leaving this here so you can avoid the Gotcha.  Whatever this function does, it must be given permission to do so.
+        # Check here: https://github.com/awslabs/serverless-application-model/blob/master/docs/policy_templates.rst
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            Path: /status
+            RestApiId: !Ref ServiceApi
+            Method: GET
+            Auth:
+              Authorizer: CognitoAuthorizer
+  Ping:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: ping the API
+      Runtime: go1.x
+      Handler: ./dist/ping
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            Path: /ping
             RestApiId: !Ref ServiceApi
             Method: GET
 Outputs:
